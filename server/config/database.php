@@ -4,21 +4,25 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 class Database {
-    private $host = "sql107.infinityfree.com";
-    private $db_name = "if0_42922110_trading";
-    private $username = "if0_42922110";
-    private $password = "hanzganz012";
+    private $host = "db.yqkwnudtgjtxwhjaxmbl.supabase.co";
+    private $db_name = "postgres";
+    private $username = "postgres";
+    private $password = "hanzganz01*";
+    private $port = "5432";
     public $conn = null;
 
     public function getConnection() {
         if ($this->conn !== null) return $this->conn;
         try {
-            $this->conn = new PDO("mysql:host={$this->host};dbname={$this->db_name};charset=utf8mb4", $this->username, $this->password);
-            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+            $dsn = "pgsql:host=" . $this->host . ";port=" . $this->port . ";dbname=" . $this->db_name;
+            $this->conn = new PDO($dsn, $this->username, $this->password, [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            ]);
             return $this->conn;
         } catch (PDOException $e) {
-            die("Database Error: Periksa koneksi.");
+            http_response_code(500);
+            die("Koneksi database gagal: " . $e->getMessage());
         }
     }
 }
@@ -43,3 +47,4 @@ function require_admin() {
         exit;
     }
 }
+?>
