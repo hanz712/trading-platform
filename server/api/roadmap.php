@@ -1,0 +1,10 @@
+<?php
+require_once __DIR__ . '/../config/database.php'; require_login(); $db=(new Database())->getConnection(); $uid=$_SESSION['user_id'];
+$levels=$db->query("SELECT * FROM levels ORDER BY level_order")->fetchAll();
+$lessons=$db->query("SELECT l.*,lv.level_order FROM lessons l JOIN levels lv ON lv.id=l.level_id ORDER BY lv.level_order,l.lesson_order")->fetchAll();
+$done=$db->prepare("SELECT lesson_id FROM lesson_progress WHERE user_id=? AND completed=1"); $done->execute([$uid]); $completed=array_flip($done->fetchAll(PDO::FETCH_COLUMN));
+?>
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Roadmap · TradingLearn</title><script src="https://cdn.tailwindcss.com"></script></head>
+<body class="bg-slate-50"><nav class="bg-white border-b"><div class="max-w-5xl mx-auto p-4 flex justify-between"><b class="text-blue-600">TradingLearn</b><a href="dashboard.php">Dashboard</a></div></nav><main class="max-w-5xl mx-auto p-5 md:p-8"><h1 class="text-3xl font-black">Learning Roadmap 🎯</h1><p class="text-slate-500 mt-2 mb-8">Mulai dari fundamental sebelum masuk konsep yang lebih kompleks.</p>
+<?php foreach($levels as $lv): ?><section class="mb-8"><div class="flex items-center gap-3 mb-3"><span class="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-bold">LEVEL <?=$lv['level_order']?></span><h2 class="text-xl font-bold"><?=e($lv['title'])?></h2></div><p class="text-sm text-slate-500 mb-4"><?=e($lv['description'])?></p><div class="grid md:grid-cols-2 gap-3"><?php foreach($lessons as $lesson): if($lesson['level_id']!=$lv['id']) continue; ?><a href="lesson.php?id=<?=$lesson['id']?>" class="bg-white p-5 rounded-2xl border shadow-sm hover:border-blue-300"><div class="flex justify-between gap-3"><div><p class="text-xs text-slate-400">Lesson <?=$lesson['lesson_order']?></p><h3 class="font-bold mt-1"><?=e($lesson['title'])?></h3><p class="text-sm text-slate-500 mt-1"><?=e($lesson['description'])?></p></div><span><?=isset($completed[$lesson['id']])?'✅':'→'?></span></div></a><?php endforeach; ?></div></section><?php endforeach; ?>
+</main></body></html>
