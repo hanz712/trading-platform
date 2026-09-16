@@ -4,25 +4,26 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 class Database {
-    private $host = "aws-0-ap-southeast-2.pooler.supabase.co";
-    private $db_name = "postgres";
-    private $username = "postgres.yqkwnudtgjtxwhjaxmbl";
-    private $password = "hanzganz01*";
-    private $port = "5432";
-    public $conn = null;
+    // Kita gunakan format connection string lengkap (URI) untuk menghindari error parser host terpisah
+    private $conn = null;
 
     public function getConnection() {
         if ($this->conn !== null) return $this->conn;
         try {
-            $dsn = "pgsql:host=" . $this->host . ";port=" . $this->port . ";dbname=" . $this->db_name;
-            $this->conn = new PDO($dsn, $this->username, $this->password, [
+            // Format URI lengkap Pooler Supabase
+            $dsn = "pgsql:host=aws-0-ap-southeast-2.pooler.supabase.co;port=5432;dbname=postgres";
+            $username = "postgres.yqkwnudtgjtxwhjaxmbl";
+            $password = "hanzganz01*";
+
+            $this->conn = new PDO($dsn, $username, $password, [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                PDO::ATTR_TIMEOUT => 10,
+                PDO::ATTR_TIMEOUT => 15,
             ]);
             return $this->conn;
         } catch (PDOException $e) {
             http_response_code(500);
+            // Menampilkan info detail untuk debugging
             die("Koneksi database gagal: " . $e->getMessage());
         }
     }
@@ -49,12 +50,7 @@ function require_admin() {
     }
 }
 ?>
-.php");
-        exit;
-    }
-}
-?>
-("Location: /server/api/auth/login.php");
+hp");
         exit;
     }
 }
