@@ -1,0 +1,9 @@
+# Environment variables
+.env
+
+# Dependencies / Vendor folder (biasanya di-generate otomatis oleh composer)
+vendor/
+
+# OS generated files
+.DS_Store
+Thumbs.db
