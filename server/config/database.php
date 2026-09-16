@@ -4,12 +4,20 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 class Database {
-    private $host = "db.yqkwnudtgjtxwhjaxmbl.supabase.co";
-    private $db_name = "postgres";
-    private $username = "postgres";
-    private $password = "hanzganz01*";
-    private $port = "5432";
+    private $host;
+    private $db_name;
+    private $username;
+    private $password;
+    private $port;
     public $conn = null;
+
+    public function __construct() {
+        $this->host = getenv('DB_HOST') ?: 'aws-0-ap-southeast-1.pooler.supabase.co';
+        $this->db_name = getenv('DB_NAME') ?: 'postgres';
+        $this->username = getenv('DB_USER') ?: 'postgres.yqkwnudtgjtxwhjaxmbl';
+        $this->password = getenv('DB_PASSWORD') ?: 'hanzganz01*';
+        $this->port = getenv('DB_PORT') ?: '5432';
+    }
 
     public function getConnection() {
         if ($this->conn !== null) return $this->conn;
