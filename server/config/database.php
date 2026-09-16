@@ -4,21 +4,13 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 class Database {
-    private $host;
-    private $db_name;
-    private $username;
-    private $password;
-    private $port;
+    // Kita hardcode langsung ke Connection Pooler Supabase region Sydney
+    private $host = "aws-0-ap-southeast-2.pooler.supabase.co";
+    private $db_name = "postgres";
+    private $username = "postgres.yqkwnudtgjtxwhjaxmbl";
+    private $password = "hanzganz01*";
+    private $port = "5432";
     public $conn = null;
-
-    public function __construct() {
-        // Menggunakan region Sydney (ap-southeast-2) sesuai project Supabase-mu
-        $this->host = getenv('DB_HOST') ?: 'aws-0-ap-southeast-2.pooler.supabase.co';
-        $this->db_name = getenv('DB_NAME') ?: 'postgres';
-        $this->username = getenv('DB_USER') ?: 'postgres.yqkwnudtgjtxwhjaxmbl';
-        $this->password = getenv('DB_PASSWORD') ?: 'hanzganz01*';
-        $this->port = getenv('DB_PORT') ?: '5432';
-    }
 
     public function getConnection() {
         if ($this->conn !== null) return $this->conn;
@@ -46,6 +38,18 @@ function e($value) {
 function require_login() {
     if (!isset($_SESSION['user_id'])) {
         header("Location: /server/api/auth/login.php");
+        exit;
+    }
+}
+
+function require_admin() {
+    if (!isset($_SESSION['user_id']) || !isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+        header("Location: /server/api/auth/login.php");
+        exit;
+    }
+}
+?>
+("Location: /server/api/auth/login.php");
         exit;
     }
 }
