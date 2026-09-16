@@ -4,7 +4,6 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 class Database {
-    // Kita hardcode langsung ke Connection Pooler Supabase region Sydney
     private $host = "aws-0-ap-southeast-2.pooler.supabase.co";
     private $db_name = "postgres";
     private $username = "postgres.yqkwnudtgjtxwhjaxmbl";
@@ -19,6 +18,7 @@ class Database {
             $this->conn = new PDO($dsn, $this->username, $this->password, [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_TIMEOUT => 10,
             ]);
             return $this->conn;
         } catch (PDOException $e) {
@@ -45,6 +45,11 @@ function require_login() {
 function require_admin() {
     if (!isset($_SESSION['user_id']) || !isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
         header("Location: /server/api/auth/login.php");
+        exit;
+    }
+}
+?>
+.php");
         exit;
     }
 }
