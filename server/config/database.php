@@ -12,7 +12,8 @@ class Database {
     public $conn = null;
 
     public function __construct() {
-        $this->host = getenv('DB_HOST') ?: 'aws-0-ap-southeast-1.pooler.supabase.co';
+        // Menggunakan region Sydney (ap-southeast-2) sesuai project Supabase-mu
+        $this->host = getenv('DB_HOST') ?: 'aws-0-ap-southeast-2.pooler.supabase.co';
         $this->db_name = getenv('DB_NAME') ?: 'postgres';
         $this->username = getenv('DB_USER') ?: 'postgres.yqkwnudtgjtxwhjaxmbl';
         $this->password = getenv('DB_PASSWORD') ?: 'hanzganz01*';
